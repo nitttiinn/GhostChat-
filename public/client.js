@@ -17,8 +17,8 @@ function sendMessage(){
 }
 
 //socket.on(...) doesn't run on "new message on the server" in general — it runs when the server emits a 'message' event to this client.
-socket.on('message', (msg)=>{ // this callback runs whenever a 'message' event is received from the server
+socket.on('message', ({nickname,text})=>{ // this callback runs whenever a 'message' event is received from the server
     const li = document.createElement('li'); // create a <li> element for the message
-    li.textContent= msg; // set the text content of <li>  to the received message
+    li.textContent=`${nickname}: ${text}`; // set the text content of <li>  to the received message
     messages.appendChild(li); // append the new <li> to the <ul id = 'messages'> element in the DOM 
 });

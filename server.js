@@ -9,15 +9,33 @@ const io = new Server(server); // creating a websocket sever using Socket.IO, bi
 // Serve Static files 
 app.use(express.static('public')); // Serve anything inside the /public folder as a webpage
 
+const nicknames = {}
+// Function to generate nickname
+function generateId(){
+    const length = 5;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let id = '';
+    for(let i = 0;i<length;i++){
+        id += chars.charAt(Math.floor(Math.random()*chars.length));
+    }
+    return id;
+}
+
 // handle websocket connections 
 io.on('connection', (socket)=>{ // this runs every time a new client connects to the webSocket server.
-    console.log('new user Connected'); // a log on server to confirm user connection.
+    const ghostid = `👻${generateId()}`;
+    nicknames[socket.id] = ghostid;
+    console.log(`New Ghost Connected: ${ghostid}`); // a log on server to confirm user connection.
     socket.on('message', (msg) =>{ // waits for a message event from the user
-        io.emit('message', msg); // broadcast the same message to everyone connected.(including the sender).
+        io.emit('message', {
+            nickname: ghostid,
+            text: msg
+        }); // broadcast the same message to everyone connected.(including the sender).
     });
 
     socket.on('disconnect', ()=>{ // when user closes tab or disconnects 
-        console.log('User disconnected');
+        delete nicknames[socket.id];
+        console.log(`${ghostid} Ghost Disconnected!!`);
     })
 });
 
