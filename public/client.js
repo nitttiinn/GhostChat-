@@ -1,11 +1,29 @@
 // browser-side js
-
-
 const socket = io(); // connects to the socket.IO server (running at same domain & port)
 
 // grabs references to DOM elements - where messages will show and  input will be taken from.
 const message = document.getElementById('messages'); 
 const input = document.getElementById('msgInput');
+const typingIndicator = document.getElementById('typing-indicator');
+let typingTimeout;
+
+input.addEventListener('input', () => {
+    socket.emit('typing');
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(()=>{
+        typingIndicator.innerText = '';
+    },2500); //  hide after 2.5 sec
+});
+
+socket.on('user-typing', (nickname) =>{
+    typingIndicator.innerText = `${nickname} is typing...`
+    
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(()=>{
+        typingIndicator.innerText = '';
+    },2500)
+})
 
 // when user clicks "Send", this function will be invoked:
 function sendMessage(){

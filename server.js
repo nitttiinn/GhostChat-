@@ -26,12 +26,20 @@ io.on('connection', (socket)=>{ // this runs every time a new client connects to
     const ghostid = `👻${generateId()}`;
     nicknames[socket.id] = ghostid;
     console.log(`New Ghost Connected: ${ghostid}`); // a log on server to confirm user connection.
+
+    // message logic
     socket.on('message', (msg) =>{ // waits for a message event from the user
         io.emit('message', {
             nickname: ghostid,
             text: msg
         }); // broadcast the same message to everyone connected.(including the sender).
     });
+
+    // Typing logic
+    socket.on('typing', () =>{
+        socket.broadcast.emit('user-typing', nicknames[socket.id]);
+    })
+
 
     socket.on('disconnect', ()=>{ // when user closes tab or disconnects 
         delete nicknames[socket.id];
