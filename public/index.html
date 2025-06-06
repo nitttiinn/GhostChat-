@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostChat</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: white; padding: 20px; }
+    #messages { list-style-type: none; padding: 0; }
+    #messages li { padding: 5px 10px; border-bottom: 1px solid #444; }
+    input { padding: 10px; width: 80%; }
+    button { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>GhostChat 👻</h2>
+  <ul id="messages"></ul>
+  <input id="msgInput" autocomplete="off" placeholder="Type something..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
