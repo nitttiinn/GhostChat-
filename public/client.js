@@ -17,13 +17,12 @@ input.addEventListener('input', () => {
 });
 
 socket.on('user-typing', (nickname) =>{
-    typingIndicator.innerText = `${nickname} is typing...`
-    
+    typingIndicator.innerText = `${nickname} is typing...`;
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(()=>{
         typingIndicator.innerText = '';
-    },2500)
-})
+    },2500);
+});
 
 // when user clicks "Send", this function will be invoked:
 function sendMessage(){
@@ -31,10 +30,10 @@ function sendMessage(){
     if(msg){
         socket.emit('message', msg); // sends the message(msg) as data to server via WebSocket(emit 'message' event)
         input.value = ''; // clear the input box after sending
-    }
-}
+    };
+};
 
-//socket.on(...) doesn't run on "new message on the server" in general — it runs when the server emits a 'message' event to this client.
+// In general — it runs when the server emits a 'message' event to this client.
 socket.on('message', ({nickname,text})=>{ // this callback runs whenever a 'message' event is received from the server
     const li = document.createElement('li'); // create a <li> element for the message
     li.textContent=`${nickname}: ${text}`; // set the text content of <li>  to the received message

@@ -35,17 +35,18 @@ io.on('connection', (socket)=>{ // this runs every time a new client connects to
         }); // broadcast the same message to everyone connected.(including the sender).
     });
 
-    // Typing logic
+    // Typing logic 
     socket.on('typing', () =>{
         socket.broadcast.emit('user-typing', nicknames[socket.id]);
-    })
-
+    });
 
     socket.on('disconnect', ()=>{ // when user closes tab or disconnects 
         delete nicknames[socket.id];
         console.log(`${ghostid} Ghost Disconnected!!`);
-    })
+    });
 });
+
+
 
 server.listen(3000,() =>{
     console.log('Server running on http://localhost:3000');
