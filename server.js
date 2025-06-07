@@ -27,11 +27,15 @@ io.on('connection', (socket)=>{ // this runs every time a new client connects to
     nicknames[socket.id] = ghostid;
     console.log(`New Ghost Connected: ${ghostid}`); // a log on server to confirm user connection.
 
+    // Broadcast join message:
+    socket.emit('system-message', `👻${ghostid} has joined the chat`)
+
     // message logic
     socket.on('message', (msg) =>{ // waits for a message event from the user
         io.emit('message', {
             nickname: ghostid,
-            text: msg
+            text: msg,
+            timeout:60000
         }); // broadcast the same message to everyone connected.(including the sender).
     });
 
@@ -41,6 +45,7 @@ io.on('connection', (socket)=>{ // this runs every time a new client connects to
     });
 
     socket.on('disconnect', ()=>{ // when user closes tab or disconnects 
+        socket.emit('system-message', `${ghostid} has vanished 💨`);
         delete nicknames[socket.id];
         console.log(`${ghostid} Ghost Disconnected!!`);
     });

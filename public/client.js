@@ -34,8 +34,26 @@ function sendMessage(){
 };
 
 // In general — it runs when the server emits a 'message' event to this client.
-socket.on('message', ({nickname,text})=>{ // this callback runs whenever a 'message' event is received from the server
+socket.on('message', ({nickname,text,timeout})=>{ // this callback runs whenever a 'message' event is received from the server
     const li = document.createElement('li'); // create a <li> element for the message
     li.textContent=`${nickname}: ${text}`; // set the text content of <li>  to the received message
     messages.appendChild(li); // append the new <li> to the <ul id = 'messages'> element in the DOM 
+    
+    // Vanish message after 60 seconds
+    setTimeout(() =>{
+        li.remove();
+    },timeout || 30000);
 });
+
+socket.on('system-message', (msg)=>{
+    const li = document.createElement('li');
+    li.textContent = msg;
+    li.style.fontStyle = 'italic';
+    li.style.color = 'gray';
+    message.appendChild(li);
+
+    // vanish this message too
+    setTimeout(()=>{
+        li.remove();
+    },timeout)
+})
